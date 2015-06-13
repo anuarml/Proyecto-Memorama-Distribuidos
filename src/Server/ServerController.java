@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Yussel,Ramon,Anuar
+ * @author Vanessa, Abner
  */
 public class ServerController {
     
@@ -66,6 +66,17 @@ public class ServerController {
                     
                     break;
                 }
+		case RequestMessage.VOLTEAR_CARTA_JUGADA:
+		{
+		    String data1 = reqMsg.getData1();
+		    int indiceCarta = gson.fromJson(data1, int.class);
+                    System.out.println("Antes de mostrar");
+                    boolean volteada= voltearCarta(indiceCarta);
+                    
+                    out.writeUTF(gson.toJson(volteada)+'\n');
+                    
+                    break;
+		}
                 
             }
         } catch (IOException ex) {
@@ -100,6 +111,35 @@ public class ServerController {
         }
         return false;
     }
+    
+    private synchronized boolean voltearCarta(int indiceCarta){
+        //Carta cartaVolteada = tableroCartas.get(carta.getId());
+        //int indiceCartaVolteada = tableroCartas.indexOf(carta);
+        //Carta cartaVolteada = tableroCartas.get(indiceCartaVolteada);
+        //Carta cartaVolteada = carta;
+        Carta cartaVolteada = tableroCartas.get(indiceCarta);
+        System.out.println("En mostrar");
+        if(cartaVolteada.estaBolteada() == true){
+            
+            String jsonCarta = gson.toJson(indiceCarta);
+            
+            RequestMessage rm = new RequestMessage(RequestMessage.VOLTEAR_CARTA_JUGADA, jsonCarta);
+            
+            String jsonMsg = gson.toJson(rm);
+            //Carta cartaVolteada = tableroCartas.get(indiceCartaVolteada);
+            cartaVolteada.setEstaBolteada(false);
+            
+            //Se obtiene la instancia del MulticasServer
+            MulticastServer ms = MulticastServer.getInstance();
+            //Se difunde el mensaje a todo el grupo
+            System.out.println("Despues validacion");
+            ms.sendMulticast(jsonMsg);
+            
+            return true;
+        }
+        return false;
+    }
+
     
     
     

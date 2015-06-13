@@ -14,7 +14,7 @@ import java.util.Random;
 
 /**
  *
- * @author x
+ * @author Vanessa, Abner
  */
 public class Reglas {
     static ArrayList<Carta> ordenCartas;

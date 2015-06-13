@@ -5,19 +5,21 @@
  */
 package Model;
 
+import java.net.Socket;
+
 /**
  *
- * @author Vanessa
+ * @author Vanessa, Abner
  */
 public class Jugador {
     int id;
-    String name;
+    Socket cs;
     int score;
     boolean isPlaying;
 
-    public Jugador(int id, String name, int score, boolean isPlaying) {
+    public Jugador(int id, int score,Socket cs, boolean isPlaying) {
         this.id = id;
-        this.name = name;
+        this.cs = cs;
         this.score = score;
         this.isPlaying = isPlaying;
     }

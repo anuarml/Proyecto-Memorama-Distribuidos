@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package Client;
 
 import Model.Carta;
@@ -12,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author 
+ * @author Vanessa, Abner
  */
 public class ClientController {
     private TCPClient tcpClient;
@@ -75,7 +71,27 @@ public class ClientController {
         return actualizada;
     }
        
-   
+   public boolean voltearCartaJugada(int indiceCarta){
+	String jsonCarta = gson.toJson(indiceCarta);
+	 
+	RequestMessage rm = new RequestMessage(RequestMessage.VOLTEAR_CARTA_JUGADA, jsonCarta);
+	
+	String jsonMsg = gson.toJson(rm);
+	
+	//Envía petición al servidor
+        tcpClient.sendMessage(jsonMsg);
+        
+        //Recibe respeusta del servidor
+        String msg = tcpClient.recieveMessage();
+        
+        boolean volteada= gson.fromJson(msg, boolean.class);
+        
+        return volteada;
+   }
+
+   public boolean actualizarScore(){
+       return true;
+   }
     
     public void close(){
         tcpClient.close();

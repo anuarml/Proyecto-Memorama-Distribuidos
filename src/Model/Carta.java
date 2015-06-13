@@ -7,7 +7,7 @@ package Model;
 
 /**
  *
- * @author x
+ * @author Vanessa, Abner
  */
 public class Carta {
     int id;

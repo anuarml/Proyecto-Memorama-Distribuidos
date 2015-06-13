@@ -6,11 +6,13 @@ package Model;
 
 /**
  *
- * @author Yussel,Ramon,Anuar
+ * @author Vanessa, Abner
  */
 public class RequestMessage {
     public static final int OBTENER_TABLERO = 0;
     public static final int ACTUALIZAR_CARTA_JUGADA = 1;
+    public static final int VOLTEAR_CARTA_JUGADA = 2;
+    public static final int ACTUALIZAR_SCORE = 3;
     
     private int messageType;
     private String data1;

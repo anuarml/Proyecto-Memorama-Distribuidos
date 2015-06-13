@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Yussel,Ramon,Anuar
+ * @author Vanessa, Abner
  */
 public class Connection extends Thread {
 

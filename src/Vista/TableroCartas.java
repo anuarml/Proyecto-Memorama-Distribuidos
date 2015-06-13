@@ -1,11 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Vista;
-
-
 
 import Client.ClientController;
 import Model.Carta;
@@ -30,7 +23,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author x
+ * @author Vanessa, Abner
  */
 public class TableroCartas implements ActionListener, Observer {
 public int NUM_INTENTOS=2;
@@ -49,9 +42,11 @@ JButton []arregloCartas = new JButton[NUM_CARTAS];//arreglo de botones
 JPanel contenedorCartas;
 JFrame ventanaCartas;
 Jugador jugadorMemorama;
+Boolean esPar=false;
 
 
     public TableroCartas(boolean turno, ArrayList<Carta> ordenImagenes) {
+
         this.ventanaCartas=new JFrame("Memorama");
         this.ventanaCartas.setLayout(new BorderLayout(10, 20));
         this.ordenImagenes=ordenImagenes;
@@ -73,10 +68,10 @@ Jugador jugadorMemorama;
     @Override
     public void actionPerformed(ActionEvent e) {
         if(esMiTurno){
-            
+            int idImage=Integer.parseInt(e.getActionCommand());
             if(this.numIntechosHechos<2){
              
-            int idImage=Integer.parseInt(e.getActionCommand());
+            //int idImage=Integer.parseInt(e.getActionCommand());
               
             this.posicionCartasVolteadas.add(idImage);
             this.voltearCarta(idImage);
@@ -84,14 +79,19 @@ Jugador jugadorMemorama;
             this.numIntechosHechos++;
                 
             }else{
-                JOptionPane.showMessageDialog(ventanaCartas, "No es tu turno.");
+           
+                checarCartasVolteadas();
+                //if(!esPar){
+                    //clientControl.voltearCartaJugada(idImage-1);
+                //}
+
+             
+                //JOptionPane.showMessageDialog(ventanaCartas, "Se te acabaron los intentos.");
             }
         }else{
             JOptionPane.showMessageDialog(ventanaCartas, "No es tu turno.");
         }
-        if(this.numIntechosHechos==2){
-            this.checarCartasVolteadas();
-        }
+        
         
         
         
@@ -129,8 +129,8 @@ Jugador jugadorMemorama;
     private void MostrarGanador(){
         JOptionPane.showMessageDialog(ventanaCartas, "Ganaste");
         ventanaCartas.setVisible(false);
-        MenuInicio inicio=new MenuInicio();
-        inicio.setVisible(true);
+        //MenuInicio inicio=new MenuInicio();
+        //inicio.setVisible(true);
     }
 
    
@@ -175,6 +175,18 @@ private void desvoltearCarta(int idImage){
                 
                 break;
             }
+	    case RequestMessage.VOLTEAR_CARTA_JUGADA:{
+		String data1 = reqMsg.getData1();
+
+		int indiceCarta = gson.fromJson(data1, int.class);
+		System.out.println("Indice: " + indiceCarta);
+		desvoltearCarta(indiceCarta+1);
+		
+		break;
+	    }
+	    case RequestMessage.ACTUALIZAR_SCORE:{
+		break;
+	    }
         }
     }
 
@@ -193,19 +205,31 @@ private void desvoltearCarta(int idImage){
             //this.ctrlComunicacion.notificarCartasVolteadas(this.posicionCartasVolteadas);
             this.ordenImagenes.get(idPrimeraCarta).setEstaBolteada(true);
             this.ordenImagenes.get(idSegundaCarta).setEstaBolteada(true);
+            
+	    clientControl.actualizarScore();
             JOptionPane.showMessageDialog(ventanaCartas,"Termino turno");
+            esPar=true;
             }
             
         }else{
-            JOptionPane.showMessageDialog(ventanaCartas,"Termino turno");
+           JOptionPane.showMessageDialog(ventanaCartas,"Termino turno");
            this.desvoltearCarta(idPrimeraCarta);
            this.desvoltearCarta(idSegundaCarta);
-            this.esMiTurno=false;
+	   clientControl.voltearCartaJugada(idPrimeraCarta-1);
+           clientControl.voltearCartaJugada(idSegundaCarta-1);
+           this.esMiTurno=false;
+           esPar=false;
         }
          this.posicionCartasVolteadas.clear();
         this.numIntechosHechos=0;
         this.esMiTurno=true;
         
     }
-  
+
+     public static void main(String[] args) {
+        ClientController clientControl = new ClientController();
+        ArrayList<Carta> ordenCartas = clientControl.obtenerTablero();
+        new TableroCartas(true,ordenCartas);
+    }
 }
+

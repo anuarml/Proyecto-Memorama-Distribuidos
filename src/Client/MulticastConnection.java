@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author
+ * @author Vanessa, Abner
  */
 public class MulticastConnection extends Thread{
 
